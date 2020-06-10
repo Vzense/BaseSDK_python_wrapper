@@ -20,7 +20,7 @@ if camera_count > 1:
     index = input("chose open camera:")
 else:
     index = 0
-    print("only one cam, atuo chose")        
+    print("only one cam, auto chose")
 
 
 rst, handle = camera.open_cam(int(index))
@@ -85,7 +85,3 @@ if  rst == 'success':
                 if index == int(mode_input):
                     camera.set_depth_range(handle, 0, element)
                     depth_max, value_min, value_max = camera.get_measuring_range(handle, 0, element)
-
-            
-
-        
