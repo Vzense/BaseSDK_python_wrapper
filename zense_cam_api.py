@@ -117,10 +117,11 @@ class PsMeasuringRange(Structure):
                 ("effectDepthMinFar", c_uint16)]
 
 class DataMode(Enum):
-    DEPTH_AND_RGB_30    = 0
-    IR_AND_RGB_30       = 1
-    DEPTH_AND_IR_30     = 2
-    STANDBY             = 102
+    DEPTH_AND_RGB_30        = 0
+    IR_AND_RGB_30           = 1
+    DEPTH_AND_IR_30         = 2
+    DEPTH_AND_IR_15_RGB_30  = 10
+    STANDBY                 = 102
 class FrameType(Enum):
     DEPTH_FRAME         = 0
     IR_FRAME            = 1
@@ -210,7 +211,7 @@ class PicoTofCam():
     def get_frame(self, handle, session = 0, frametype = FrameType.DEPTH_FRAME):
         rst = self.ps_cam_lib.Ps2_GetFrame(handle, session, frametype.value, byref(self.psframe))
         if rst == 0: 
-            if self.psframe.frameType == FrameType.DEPTH_FRAME.value or self.psframe.frameType == FrameType.IR_FRAME.value:
+            if self.psframe.frameType == FrameType.DEPTH_FRAME.value: #or self.psframe.frameType == FrameType.IR_FRAME.value:
                 frametmp = numpy.ctypeslib.as_array(self.psframe.pFrameData, (1, self.psframe.width * self.psframe.height * 2))
                 frametmp.dtype = numpy.uint16
                 frametmp.shape = (480, 640)
@@ -220,6 +221,12 @@ class PicoTofCam():
                 frametmp = numpy.ctypeslib.as_array(self.psframe.pFrameData, (1, self.psframe.width * self.psframe.height * 3))
                 frametmp.dtype = numpy.uint8
                 frametmp.shape = (self.psframe.height, self.psframe.width, 3)
+                self.frame = frametmp.copy()
+                return 'success', self.frame, self.psframe.width,self.psframe.height
+            elif self.psframe.frameType == FrameType.IR_FRAME.value:
+                frametmp = numpy.ctypeslib.as_array(self.psframe.pFrameData, (1, self.psframe.width * self.psframe.height * 2))
+                frametmp.dtype = numpy.uint16
+                frametmp.shape = (480, 640)
                 self.frame = frametmp.copy()
                 return 'success', self.frame, self.psframe.width,self.psframe.height
             else:

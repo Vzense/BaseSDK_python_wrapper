@@ -49,6 +49,10 @@ if  rst == 'success':
         if frameready.ir:
             rst,irframe,width,height = camera.get_frame(handle, 0, FrameType.IR_FRAME)
             if rst == 'success':
+                img = numpy.int32(irframe)
+                img = img*255/4095
+                img = numpy.clip(img, 0, 255)
+                irframe = numpy.uint8(img)
                 cv2.namedWindow("irimage")
                 cv2.imshow("irimage", irframe)
         if frameready.rgb:
