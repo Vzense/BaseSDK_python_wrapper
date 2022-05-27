@@ -1,43 +1,65 @@
-
-
 ## Python Wrapper for Vzense Base SDK API
 
 Python wrapper is an opensource project of Vzense TOF camera API.
 
 The goal of this project is to help developers use Vzense TOF camera via python method easily.
 
+- PythonSDK version: V3.4.16
+- VzenseBaseSDK version: V3.4.16
+
+### Supported Devices
+
+- DCAM710 
+- DCAM550U
+- DCAM550P
+- DCAM550E
+- DCAM560C
 ### Requirements
 
-- Vzense library: vzense_api.dll / libvzense_api.so
+- python version : 3.7.x
 - python modules : ctypes, numpy, opencv-python(display only)
 
 ### Directory
 
-- **linux_lib / windows_lib**: The dynamic library folder
+- **DCAM550**: the API and Sample code for DCAM550U/DCAM550P/DCAM550E
+- **DCAM560**: the API and Sample code for DCAM560CPRO/DCAM560CLITE
+- **DCAM710**: the API and Sample code for DCAM710
+- **Lib**: VzenseBaseSDK dynamic library files
+- **install.py**: install file
+- **config.txt**: set the config that needed by 'install.py', such as:
+```
+system = Windows  # Windows64/Windows32/Ubuntu20.04/Ubuntu18.04/Ubuntu16.04/AArch64/Arm-linux-gnueabihf
+url = https://gitee.com/Vzense/Vzense_SDK_windows.git # https://gitee.com/Vzense/Vzense_SDK_linux.git (gitee or github)
 
-  ```
-  /libImgPreProcess.so
-  /libvzense_api.so
-  ```
+Windows64:
+windows 64 bit
+Windows32:
+windows 32 bit
+Ubuntu18.04:
+Ubuntu18.04 PC SDK package that is developed for personal computer platform(x86_64), use standard compiler x86_64-linux-gnu(v7.5.0)
+Ubuntu18.04 SDK package compatible with Ubuntu20.04
+Ubuntu16.04:
+Ubuntu16.04 PC SDK package that is developed for personla computer platform(x86_64), use standard compiler x86_64-linux-gnu(v5.4.0)
+AArch64:
+arm64 SDK package that is developed for aarch64 platform, use standard compiler aarch64-linux-gnu(v5.4.0)
+Arm-linux-gnueabihf:
+arm32 SDK package that is developed for arm32 platform, use standard compiler arm-linux-gnueabihf(v5.4.0)
 
-- **zense_cam_api.py**: zense tof wrapper code 
+```
 
-- **zense_cam_demo.py**: python api using demo code
+### Quick Start
 
-### How to use
+- step1. install modules:
+         
+```	 
+	  pip install numpy
+	  pip install opencv-python 
+```
+- step2. Set 'config.txt' according to your needs
 
-1. make sure copy the right dynamic library files to project root directory
-2. Run zense_cam_demo.py
+- step3. Run the 'python install.py' 
 
-User can refrence the demo code to create your project.
-
-### FAQ:
-
-Which version do you use?
-
-python3.6, [Vzense_SDK_linux](https://github.com/Vzense/Vzense_SDK_linux) v3.0.0.8 Ubuntu18.04, [Vzense_SDK_windows](https://github.com/Vzense/Vzense_SDK_windows) v3.0.0.8
-
-Which devices can this project support?
-
-This demo only support DCAM710. If you want to use other product, you can modify the code based on different API. But there have very little difference.
+- step4. Switch to Samples under the product directory, run the sample that you need. 
+    	 
+         For example, go to the DCAM560/Samples/FrameViewer, then run 'python FrameViewer_DCAM560.py'
 
