@@ -11,7 +11,7 @@ import ctypes
  
 
 system_config = "Ubuntu18.04"
-url_config = "https://gitee.com/Vzense/Vzense_SDK_linux.git"
+url_config = "https://gitee.com"
 
 # py version >= 3.5 
 def execSysCommand(arglist):
@@ -75,9 +75,11 @@ def checkConfig():
 
                 tmp_list = lines[1].split('=')
                 if len(tmp_list) == 2:
-                    url_config = tmp_list[1].strip()
-
-
+                    if system_config == 'Windows64' or system_config == 'Windows32':
+                        url_config = tmp_list[1].strip()+ '/Vzense/Vzense_SDK_windows.git'
+                else:
+                    url_config = tmp_list[1].strip()+ '/Vzense/Vzense_SDK_linux.git'
+                    
                 return True    
             else:
                 return False 

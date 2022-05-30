@@ -1,2 +1,2 @@
 system = Windows64
-url = https://gitee.com/Vzense/Vzense_SDK_windows.git
+url = https://gitee.com

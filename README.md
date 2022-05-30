@@ -28,24 +28,23 @@ The goal of this project is to help developers use Vzense TOF camera via python 
 - **install.py**: install file
 - **config.txt**: set the config that needed by 'install.py', such as:
 ```
-system = Windows  # Windows64/Windows32/Ubuntu20.04/Ubuntu18.04/Ubuntu16.04/AArch64/Arm-linux-gnueabihf
-url = https://gitee.com/Vzense/Vzense_SDK_windows.git # https://gitee.com/Vzense/Vzense_SDK_linux.git (gitee or github)
-
-Windows64:
-windows 64 bit
-Windows32:
-windows 32 bit
-Ubuntu18.04:
-Ubuntu18.04 PC SDK package that is developed for personal computer platform(x86_64), use standard compiler x86_64-linux-gnu(v7.5.0)
-Ubuntu18.04 SDK package compatible with Ubuntu20.04
-Ubuntu16.04:
-Ubuntu16.04 PC SDK package that is developed for personla computer platform(x86_64), use standard compiler x86_64-linux-gnu(v5.4.0)
-AArch64:
-arm64 SDK package that is developed for aarch64 platform, use standard compiler aarch64-linux-gnu(v5.4.0)
-Arm-linux-gnueabihf:
-arm32 SDK package that is developed for arm32 platform, use standard compiler arm-linux-gnueabihf(v5.4.0)
-
+system = Windows64
+url = https://gitee.com
 ```
+|system|details|
+|---|---|
+|Windows64|windows 64 bit|
+|Windows32|windows 32 bit|
+|Ubuntu20.04|the same with Ubuntu18.04 PC SDK|
+|Ubuntu18.04|for PC with x86_64-linux-gnu(v7.5.0)|
+|Ubuntu16.04|for PC with x86_64-linux-gnu(v5.4.0)|
+|AArch64|for aarch64 with aarch64-linux-gnu(v5.4.0)|
+|Arm-linux-gnueabihf|for arm32 with arm-linux-gnueabihf(v5.4.0)|
+
+|url|
+|---|
+|https://gitee.com|
+|https://github.com|
 
 ### Quick Start
 
