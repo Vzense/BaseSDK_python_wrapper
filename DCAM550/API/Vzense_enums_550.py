@@ -3,7 +3,6 @@ from ctypes import *
 from enum import Enum
  
 class PsDepthRange(Enum):
-    PsUnknown       = -1
     PsNearRange     = 0
     PsMidRange      = 1
     PsFarRange      = 2
@@ -13,12 +12,12 @@ class PsDepthRange(Enum):
     PsXXNearRange   = 6
     PsXXMidRange    = 7
     PsXXFarRange    = 8
+    PsUnknown       = -1
 
 class PsDataMode(Enum):
     PsDepth_30        = 0
     PsIR_30           = 1
     PsDepthAndIR_30   = 2
-    PsDepthAndIR_15   = 10
     PsWDR_Depth       = 11
 
 class PsFrameType(Enum):

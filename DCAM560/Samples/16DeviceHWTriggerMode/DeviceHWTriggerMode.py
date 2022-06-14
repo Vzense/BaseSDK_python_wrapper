@@ -3,7 +3,6 @@ import sys
 sys.path.append('../../../')
 
 from DCAM560.API.Vzense_api_560 import *
-import cv2
 import time
 
 camera = VzenseTofCam()
@@ -64,11 +63,10 @@ ret = camera.Ps2_SetSlaveModeEnabled()
 if  ret != 0:  
     print("Ps2_SetSlaveModeEnabled failed:",ret)
 
-for i in range(30):
+for i in range(300000):
     ret, frameready = camera.Ps2_ReadNextFrame()
     if  ret !=0:
         print("Ps2_ReadNextFrame failed:",ret)
-        time.sleep(1)
         continue       
     if  frameready.depth:      
         ret,frame = camera.Ps2_GetFrame(PsFrameType.PsDepthFrame)

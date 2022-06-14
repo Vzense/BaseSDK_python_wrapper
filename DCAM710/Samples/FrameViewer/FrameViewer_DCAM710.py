@@ -9,18 +9,6 @@ import time
 camera = VzenseTofCam()
 
  
-ret, sdkVer = camera.Ps2_GetSDKVersion()
-if  ret == 0:
-    print("Ps2_GetSDKVersion :",str(sdkVer))
-else:
-    print("Ps2_GetSDKVersion failed:",ret)
-
-def HotPlugStateCallback(type_struct,  state = c_int32(0)):
-    print("callback done")
-    print(str(type_struct.contents.alias) + "   "+str(state))
-
-camera.Ps2_SetHotPlugStatusCallback(HotPlugStateCallback)
-
 camera_count = camera.Ps2_GetDeviceCount()
 retry_count = 100
 while camera_count==0 and retry_count > 0:
@@ -74,6 +62,13 @@ if  ret == 0:
     else:
         print("Ps2_GetMeasuringRange failed:",ret)
 
+    print("/**********************************************************************/")
+    print("M/m: Change data mode: input corresponding index in terminal")
+    print("D/d: Change depth range: input corresponding index in terminal")
+    print("R/r: Change the RGB resolution: input corresponding index in terminal")
+    print("Esc: Program quit ")
+    print("/**********************************************************************/")
+    
     try:
         while 1:
             ret, frameready = camera.Ps2_ReadNextFrame()
@@ -91,11 +86,11 @@ if  ret == 0:
 
                     #convert ushort value to 0xff is just for display
                     img = numpy.int32(frametmp)
-                    img = img*255/depth_max
+                    img = img*255/value_max
                     img = numpy.clip(img, 0, 255)
                     img = numpy.uint8(img)
                     frametmp = cv2.applyColorMap(img, cv2.COLORMAP_RAINBOW)
-                    cv2.imshow("depthimage", frametmp)
+                    cv2.imshow("Depth Image", frametmp)
                 else:
                     print("---end---")
             if  frameready.ir:
@@ -107,16 +102,15 @@ if  ret == 0:
                     img = numpy.int32(frametmp)
                     img = img*255/3840
                     img = numpy.clip(img, 0, 255)
-                    irframe = numpy.uint8(img)
-                    cv2.namedWindow("irimage")
-                    cv2.imshow("irimage", frametmp)
+                    frametmp = numpy.uint8(img)
+                    cv2.imshow("IR Image", frametmp)
             if  frameready.rgb:      
                 ret,rgbframe = camera.Ps2_GetFrame(PsFrameType.PsRGBFrame)
                 if  ret == 0:
                     frametmp = numpy.ctypeslib.as_array(rgbframe.pFrameData, (1, rgbframe.width * rgbframe.height * 3))
                     frametmp.dtype = numpy.uint8
                     frametmp.shape = (rgbframe.height, rgbframe.width,3)
-                    cv2.imshow("rgbimage", frametmp)
+                    cv2.imshow("RGB Image", frametmp)
                 else:
                     print("---end---")
             key = cv2.waitKey(1)
@@ -131,7 +125,32 @@ if  ret == 0:
                 mode_input = input("choose:")
                 for index, element in enumerate(PsDataMode):
                     if index == int(mode_input):
-                        camera.Ps2_SetDataMode(element)
+                        if index == 4:
+                            WDRMode = PsWDROutputMode()
+                            WDRMode.totalRange = 2
+                            WDRMode.range1 = 0
+                            WDRMode.range1Count = 1
+                            WDRMode.range2 = 2
+                            WDRMode.range2Count = 1
+                            WDRMode.range3 = 5
+                            WDRMode.range3Count = 1
+
+                            ret = camera.Ps2_SetWDROutputMode(WDRMode)
+                            if  ret != 0:  
+                                print("Ps2_SetWDROutputMode failed:",ret)
+                            
+                            ret = camera.Ps2_SetDataMode(element)
+                            if  ret == 0:
+                                print("Ps2_SetDataMode {} success".format(element))
+                            else:
+                                print("Ps2_SetDataMode {} failed {}".format(element,ret))
+                        else:
+                            ret = camera.Ps2_SetDataMode(element)
+                            if  ret == 0:
+                                print("Ps2_SetDataMode {} success".format(element))
+                            else:
+                                print("Ps2_SetDataMode {} failed {}".format(element,ret))
+
             elif  key == ord('r') or key == ord('R'):
                 print("resolution:")
                 for index, element in enumerate(PsResolution):
@@ -147,8 +166,18 @@ if  ret == 0:
                 mode_input = input("choose:")
                 for index, element in enumerate(PsDepthRange):
                     if  index == int(mode_input):
-                        camera.Ps2_SetDepthRange(element)
-                        depth_max, value_min, value_max = camera.Ps2_GetMeasuringRange(element)
+                        ret = camera.Ps2_SetDepthRange(element)
+                        if  ret == 0:
+                            print("Ps2_SetDepthRange {} success".format(element))
+                            ret, depth_max, value_min, value_max = camera.Ps2_GetMeasuringRange(PsDepthRange(element))
+                            if  ret == 0:
+                                print(PsDepthRange(element)," Ps2_GetMeasuringRange: ",depth_max,",",value_min,",",value_max)
+                            else:
+                                print(PsDepthRange(element)," Ps2_GetMeasuringRange failed:",ret)
+
+                        else:
+                            print("Ps2_SetDepthRange {} failed {}".format(element,ret))
+                       
     except Exception as e :
         print(e)
     finally :

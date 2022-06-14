@@ -4,8 +4,8 @@ Python wrapper is an opensource project of Vzense TOF camera API.
 
 The goal of this project is to help developers use Vzense TOF camera via python method easily.
 
-- PythonSDK version: V3.4.16
-- VzenseBaseSDK version: V3.4.16
+- PythonSDK version: V3.5.4.1
+- VzenseBaseSDK version: V3.5.4
 
 ### Supported Devices
 

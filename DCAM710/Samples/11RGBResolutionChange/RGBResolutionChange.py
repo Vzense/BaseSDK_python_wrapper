@@ -3,7 +3,6 @@ import sys
 sys.path.append('../../../')
 
 from DCAM710.API.Vzense_api_710 import *
-import cv2
 import time
 
 camera = VzenseTofCam()
@@ -60,6 +59,10 @@ if  ret == 0:
 else:
     print("Ps2_StartStream failed:",ret)     
 
+ret = camera.Ps2_SetDataMode(PsDataMode.PsDepthAndRGB_30)
+if  ret != 0:  
+    print("Ps2_SetDataMode failed:",ret)
+    
 ret = camera.Ps2_SetRGBResolution(PsResolution.PsRGB_Resolution_640_480)
 if  ret != 0:  
     print("Ps2_SetRGBResolution failed:",ret)

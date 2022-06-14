@@ -3,7 +3,6 @@ import sys
 sys.path.append('../../../')
 
 from DCAM710.API.Vzense_api_710 import *
-import cv2
 import time
 
 camera = VzenseTofCam()
@@ -31,10 +30,10 @@ if ret==0:
         cam = VzenseTofCam()
         ret = cam.Ps2_OpenDevice(device_infolist[i].uri)
         if  ret == 0:
-            print("open device successful")
+            print(device_infolist[i].alias,"open successful")
             cameras.append(cam)
         else:
-            print('Ps2_OpenDevice failed: ' + str(ret))    
+            print(device_infolist[i].alias,'Ps2_OpenDevice failed: ' + str(ret))    
 else:
     print(' failed:' + ret)  
     exit()  
@@ -42,13 +41,13 @@ else:
 for i in range(camera_count): 
     ret = cameras[i].Ps2_StartStream()       
     if  ret == 0:
-        print("start stream successful")
+        print(device_infolist[i].alias,"start stream successful")
     else:
-        print('Ps2_StartStream failed: ' + str(ret))  
+        print(device_infolist[i].alias,'Ps2_StartStream failed: ' + str(ret))  
 
 # show image 
-
-while 1:
+getCount = 100
+while getCount > 0:
     for i in range(camera_count): 
         ret, frameready = cameras[i].Ps2_ReadNextFrame()   
         if  ret !=0:
@@ -59,45 +58,16 @@ while 1:
         if  frameready.depth:      
             ret,depthframe = cameras[i].Ps2_GetFrame(PsFrameType.PsDepthFrame)
             if  ret == 0:
- 
-                frametmp = numpy.ctypeslib.as_array(depthframe.pFrameData, (1, depthframe.width * depthframe.height * 2))
-                frametmp.dtype = numpy.uint16
-                frametmp.shape = (depthframe.height, depthframe.width)
-                
-                #convert ushort value to 0xff is just for display
-                img = numpy.int32(frametmp)
-                img = img*255/6000
-                img = numpy.clip(img, 0, 255)
-                img = numpy.uint8(img)
-                frametmp = cv2.applyColorMap(img, cv2.COLORMAP_RAINBOW)
-                if 0==i:
-                    cv2.imshow("depthimage", frametmp)
-                if 1==i:
-                    cv2.imshow("depthimage1", frametmp)
+                getCount -= 1
+                print(device_infolist[i].alias,"  depth frameindex: ",depthframe.frameIndex)
             else:
                 print("Ps2_GetFrame error", ret)
         if  frameready.ir:
             ret,irframe = cameras[i].Ps2_GetFrame(PsFrameType.PsIRFrame)
             if  ret == 0:
-                frametmp = numpy.ctypeslib.as_array(irframe.pFrameData, (1, irframe.width * irframe.height * 2))
-                frametmp.dtype = numpy.uint16
-                frametmp.shape = (irframe.height, irframe.width)
-                img = numpy.int32(frametmp)
-                img = img*255/3840
-                img = numpy.clip(img, 0, 255)
-                irframe = numpy.uint8(img)
-                if 0==i:
-                    cv2.imshow("irimage", frametmp)
-                if 1==i:
-                    cv2.imshow("irimag1", frametmp)
+                print(device_infolist[i].alias,"  ir frameindex: ",irframe.frameIndex)
             else:
                 print("Ps2_GetFrame error", ret)
-
-    key = cv2.waitKey(1)
-    if  key == 27:
-        cv2.destroyAllWindows()
-        print("---end---")
-        exit()
 
 for i in range(camera_count): 
     

@@ -77,9 +77,8 @@ def checkConfig():
                 if len(tmp_list) == 2:
                     if system_config == 'Windows64' or system_config == 'Windows32':
                         url_config = tmp_list[1].strip()+ '/Vzense/Vzense_SDK_windows.git'
-                else:
-                    url_config = tmp_list[1].strip()+ '/Vzense/Vzense_SDK_linux.git'
-                    
+                    else:
+                        url_config = tmp_list[1].strip()+ '/Vzense/Vzense_SDK_linux.git'
                 return True    
             else:
                 return False 
@@ -95,6 +94,6 @@ else:
     exit()
 
 # git clone basesdk to tmp
-cmdlist = ['git','clone','-b','V3.4.16','--depth=1',url_config]
+cmdlist = ['git','clone','-b','V3.5.4','--depth=1',url_config]
 pullSDK(cmdlist)
 

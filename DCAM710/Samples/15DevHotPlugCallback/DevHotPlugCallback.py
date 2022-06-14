@@ -3,15 +3,37 @@ import sys
 sys.path.append('../../../')
 
 from DCAM710.API.Vzense_api_710 import *
-import cv2
 import time
 
 camera = VzenseTofCam()
 
 
 def HotPlugStateCallback(type_struct,  state = c_int32(0)):
-    print("callback done")
-    print(str(type_struct.contents.alias) + "   "+str(state))
+    global camera
+    if state ==0:
+        print(str(type_struct.contents.alias) + "   add")
+        ret = camera.Ps2_OpenDevice(type_struct.contents.uri)
+        if  ret == 0:
+            print(str(type_struct.contents.alias) + " open success")
+        else:
+            print(str(type_struct.contents.alias) + " open failed",ret)
+        ret = camera.Ps2_StartStream()
+        if  ret == 0:
+            print(str(type_struct.contents.alias) + " startstream success")
+        else:
+            print(str(type_struct.contents.alias) + " startstream failed",ret)
+    else:
+        print(str(type_struct.contents.alias) + "   remove")
+        ret = camera.Ps2_StopStream()
+        if  ret == 0:
+            print(str(type_struct.contents.alias) + " stopstream success")
+        else:
+            print(str(type_struct.contents.alias) + " stopstream failed",ret)
+        ret = camera.Ps2_CloseDevice()
+        if  ret == 0:
+            print(str(type_struct.contents.alias) + " close success")
+        else:
+            print(str(type_struct.contents.alias) + " close failed",ret)
 
 camera.Ps2_SetHotPlugStatusCallback(HotPlugStateCallback)
 
@@ -48,12 +70,36 @@ else:
 print("uri: "+str(device_info.uri))
 ret = camera.Ps2_OpenDevice(device_info.uri)
 
-if  ret == 0:
+if  ret == 0 or ret == -103:
+    ret = camera.Ps2_StartStream()
+    if  ret == 0:
+        print("startstream success")
+    else:
+        print("startstream failed",ret)
+
     while 1:
-        time.sleep(1)
-        continue
+        ret, frameready = camera.Ps2_ReadNextFrame()
+        if  ret !=0:
+            print("Ps2_ReadNextFrame failed:",ret)
+            time.sleep(1)
+            continue
+  
+        if  frameready.depth:      
+            ret,frame = camera.Ps2_GetFrame(PsFrameType.PsDepthFrame)
+            if  ret ==0:
+                print("frameIndex: ",frame.frameIndex)
+            else:
+                print("get depth frame failed ",ret)
+            time.sleep(1)
+            continue
 else:
     print('Ps2_OpenDevice failed: ' + str(ret))  
+
+ret = camera.Ps2_StopStream()
+if  ret == 0:
+    print("stopstream success")
+else:
+    print("stopstream failed",ret)
 
 ret = camera.Ps2_CloseDevice()     
 if  ret == 0:

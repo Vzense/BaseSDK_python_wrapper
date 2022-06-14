@@ -3,7 +3,6 @@ import sys
 sys.path.append('../../../')
 
 from DCAM560.API.Vzense_api_560 import *
-import cv2
 import time
 
 camera = VzenseTofCam()
