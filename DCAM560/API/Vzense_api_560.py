@@ -305,7 +305,7 @@ class VzenseTofCam():
     def Ps2_GetDeviceMAC(self):
         tmp = c_char * 18
         mac = tmp()
-        return self.ps_cam_lib.Ps2_GetDeviceIP(self.device_handle, self.session, mac), mac.value
+        return self.ps_cam_lib.Ps2_GetDeviceMAC(self.device_handle, self.session, mac), mac.value
          
     def Ps2_SetRGBBrightness(self, value = c_char(0)):
         return self.ps_cam_lib.Ps2_SetRGBBrightness(self.device_handle, self.session, value)

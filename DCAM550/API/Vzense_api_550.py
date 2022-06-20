@@ -253,7 +253,7 @@ class VzenseTofCam():
     def Ps2_GetDeviceMAC(self):
         tmp = c_char * 18
         mac = tmp()
-        return self.ps_cam_lib.Ps2_GetDeviceIP(self.device_handle, self.session, mac), mac.value
+        return self.ps_cam_lib.Ps2_GetDeviceMAC(self.device_handle, self.session, mac), mac.value
 
     def Ps2_SetConfidenceFilterEnabled(self, enabled = c_bool(True)): 
         return self.ps_cam_lib.Ps2_SetConfidenceFilterEnabled(self.device_handle, self.session, enabled)
